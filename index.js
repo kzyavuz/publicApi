@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config(); // Ekleyin
 require('./db/config');
 
 const aboutRoutes = require('./controller/About');
@@ -17,9 +18,10 @@ app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 app.use(express.json());
 app.use(cors({
-	origin: '*', // Production'da bunu güncelleyin
+	origin: ['https://yavuzkoz.netlify.app', 'https://yavuzkoz.netlify.app', 'http://localhost:3000'], // Güvenli domain'leri ekleyin
 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	allowedHeaders: ['Content-Type', 'Authorization']
+	allowedHeaders: ['Content-Type', 'Authorization'],
+	credentials: true
 }));
 
 app.get('/', (req, res) => {
@@ -79,6 +81,15 @@ app.post('/countMessage', Token, messageRoutes.countMessage);
 app.post('/SignIn', userRoutes.SignIn);
 app.post('/listUser', Token, userRoutes.listUser);
 app.post('/SignUp', Token, userRoutes.SignUp);
+
+// Hata yakalama middleware'i ekleyin
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).json({
+		message: 'Internal Server Error',
+		error: process.env.NODE_ENV === 'development' ? err.message : undefined
+	});
+});
 
 // PORT'u .env'den al
 const PORT = process.env.PORT || 4000;
