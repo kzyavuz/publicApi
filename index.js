@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./db/config');
+
 require('./db/config');
 
 const aboutRoutes = require('./controller/About');
@@ -37,6 +39,9 @@ app.use(cors(corsOptions));
 app.get('/', (req, res) => {
 	res.send('controller Çalısıyor.');
 });
+
+// MongoDB bağlantısını başlat
+connectDB().catch(console.error);
 
 // About methods
 app.get('/getOneAbout', aboutRoutes.getOneAbout);
@@ -92,12 +97,16 @@ app.post('/SignIn', userRoutes.SignIn);
 app.post('/listUser', Token, userRoutes.listUser);
 app.post('/SignUp', Token, userRoutes.SignUp);
 
-// Hata yakalama middleware'i ekleyin
+// Global error handler'ı güçlendir
 app.use((err, req, res, next) => {
-	console.error(err.stack);
+	console.error('Global Error:', err);
 	res.status(500).json({
+		status: 'error',
 		message: 'Internal Server Error',
-		error: process.env.NODE_ENV === 'development' ? err.message : undefined
+		error: process.env.NODE_ENV === 'development' ? {
+			message: err.message,
+			stack: err.stack
+		} : undefined
 	});
 });
 
