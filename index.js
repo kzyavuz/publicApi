@@ -1,6 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // Ekleyin
 require('./db/config');
 
 const aboutRoutes = require('./controller/About');
@@ -17,12 +17,22 @@ const app = express();
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 app.use(express.json());
-app.use(cors({
-	origin: ['https://yavuzkoz.netlify.app', 'https://yavuzkoz.netlify.app', 'http://localhost:3000'], // Güvenli domain'leri ekleyin
-	methods: ['GET', 'POST', 'PUT', 'DELETE'],
-	allowedHeaders: ['Content-Type', 'Authorization'],
-	credentials: true
-}));
+
+const corsOptions = process.env.NODE_ENV === 'production'
+	? {
+		origin: ['https://yavuzkoz.netlify.app'],
+		methods: ['GET', 'POST'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: true
+	}
+	: {
+		origin: '*',  // Development ortamında tüm kaynaklara izin ver
+		methods: ['GET', 'POST'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+		credentials: true
+	};
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
 	res.send('controller Çalısıyor.');
