@@ -8,10 +8,20 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000 # Render'ın varsayılan portu
+        value: 10000
       - key: MONGODB_URI
-        value: mongodb+srv://yavuzkoz1967:ogENy6vnahqymLFb@cluster0.95vssd8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+        value: mongodb+srv://yavuzkoz1967:ogENy6vnahqymLFb@cluster0.95vssd8.mongodb.net/portfolyo?retryWrites=true&w=majority
       - key: JWT_SECRET
         value: ld-kaldjh?TFsuWY-6424?67RDrgGVA-HhuSHWH-2024!$
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "http://yavuzkoz.com.tr, https://yavuzkoz.com.tr"
+      - path: /*
+        name: Access-Control-Allow-Methods
+        value: "GET, POST, OPTIONS"
+      - path: /*
+        name: Access-Control-Allow-Headers
+        value: "Content-Type, Authorization"
     healthCheckPath: /
     autoDeploy: true

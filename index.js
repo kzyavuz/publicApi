@@ -22,19 +22,28 @@ app.use(express.json());
 
 const corsOptions = process.env.NODE_ENV === 'production'
 	? {
-		origin: ['https://yavuzkoz.netlify.app'],
-		methods: ['GET', 'POST'],
+		origin: [
+			'https://yavuzkoz.netlify.app',
+			'http://yavuzkoz.com.tr',
+			'https://yavuzkoz.com.tr'
+		],
+		methods: ['GET', 'POST', 'OPTIONS'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
-		credentials: true
+		credentials: true,
+		preflightContinue: false,
+		optionsSuccessStatus: 204
 	}
 	: {
-		origin: '*',  // Development ortamında tüm kaynaklara izin ver
-		methods: ['GET', 'POST'],
+		origin: '*',
+		methods: ['GET', 'POST', 'OPTIONS'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 		credentials: true
 	};
 
 app.use(cors(corsOptions));
+
+// Options istekleri için özel handler
+app.options('*', cors(corsOptions));
 
 app.get('/', (req, res) => {
 	res.send('controller Çalısıyor.');
