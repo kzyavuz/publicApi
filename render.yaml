@@ -3,13 +3,15 @@ services:
     name: portfolio-api
     env: node
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node index.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 4000
-      - key: JWT_SECRET
-        sync: false
+        value: 10000 # Render'ın varsayılan portu
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://yavuzkoz1967:ogENy6vnahqymLFb@cluster0.95vssd8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: ld-kaldjh?TFsuWY-6424?67RDrgGVA-HhuSHWH-2024!$
+    healthCheckPath: /
+    autoDeploy: true

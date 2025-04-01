@@ -40,8 +40,11 @@ app.get('/', (req, res) => {
 	res.send('controller Çalısıyor.');
 });
 
-// MongoDB bağlantısını başlat
-connectDB().catch(console.error);
+// MongoDB bağlantısını başlat ve hataları yakala
+connectDB().catch(err => {
+	console.error('MongoDB bağlantı hatası:', err);
+	process.exit(1);
+});
 
 // About methods
 app.get('/getOneAbout', aboutRoutes.getOneAbout);
@@ -111,8 +114,8 @@ app.use((err, req, res, next) => {
 });
 
 // PORT'u .env'den al
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 10000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
 	console.log(`Server is running on port ${PORT}`);
 });
